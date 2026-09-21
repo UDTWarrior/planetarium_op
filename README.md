@@ -22,6 +22,11 @@ Progress, theme, and edits are saved in that device's browser. They do not sync
 between devices. Clearing browser data removes them. Editing a list resets that
 list's checked steps so old checkmarks cannot move onto different instructions.
 
+Use the section selector or Next step button to navigate without changing any
+checkmarks. Tap a reference photo to view it full-size and toggle zoom. Resetting
+progress, restoring defaults, and discarding unsaved edits require confirmation.
+Keyboard users can switch tabs with the arrow keys and close dialogs with Escape.
+
 The shutdown list retains the original note identifying steps inferred from the
 startup sequence. The equipment instructions have not been independently verified.
 

@@ -40,27 +40,31 @@
   body{
     background:var(--bg); color:var(--text);
     font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif;
-    font-size:17px; line-height:1.55; -webkit-text-size-adjust:100%; padding-bottom:calc(88px + env(safe-area-inset-bottom));
+    font-size:17px; line-height:1.55; -webkit-text-size-adjust:100%; padding-bottom:calc(140px + env(safe-area-inset-bottom));
   }
   .wrap{max-width:620px;margin:0 auto;padding:0 14px}
 
   header{display:flex;align-items:center;gap:10px;padding:14px 0 6px}
-  .brand{font-weight:700;font-size:18px;letter-spacing:-.01em;margin-inline-end:auto}
+  .brand{font-weight:700;font-size:18px;letter-spacing:-.01em;margin:0;margin-inline-end:auto}
   .brand span{color:var(--muted);font-weight:500;font-size:14px;display:block;margin-top:-2px}
   .icon-btn{
-    width:40px;height:40px;flex:0 0 40px;border-radius:12px;
+    width:44px;height:44px;flex:0 0 44px;border-radius:12px;
     background:var(--surface);border:1px solid var(--line);color:var(--muted);
     font-size:17px;display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow);
   }
   .icon-btn[aria-pressed="true"]{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
 
-  .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;background:var(--surface);
+  .tabs{position:sticky;top:0;z-index:5;display:grid;grid-template-columns:repeat(3,1fr);gap:5px;background:var(--surface);
     border:1px solid var(--line);border-radius:14px;padding:5px;box-shadow:var(--shadow)}
   .tab{appearance:none;border:0;background:transparent;color:var(--muted);
     font-family:inherit;font-size:15px;font-weight:600;padding:11px 4px;border-radius:10px;cursor:pointer}
   .tab[aria-selected="true"]{background:var(--accent-soft);color:var(--accent)}
 
-  .dome{display:block;width:100%;max-width:290px;margin:16px auto 4px;height:auto}
+  .progress-summary{display:flex;align-items:center;gap:18px;padding:16px 4px 10px}
+  .progress-copy{flex:1;min-width:0}
+  .progress-copy strong{display:block;font-size:18px}
+  .progress-copy p{color:var(--muted);font-size:14px;margin:4px 0}
+  .dome{display:block;width:110px;flex:0 0 110px;margin:0;height:auto}
   .dome .track{fill:none;stroke:var(--track);stroke-width:9;stroke-linecap:round}
   .dome .fill{fill:none;stroke:var(--accent);stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset .35s ease}
   .dome .fill.complete{stroke:var(--done)}
@@ -69,18 +73,20 @@
   .dome .caption{fill:var(--muted);font-family:"IBM Plex Sans Arabic",sans-serif;font-weight:500;font-size:12px}
 
   .list{margin:6px 0 0;display:flex;flex-direction:column;gap:8px}
-  .group{font-size:13px;font-weight:600;color:var(--muted);
-    padding:18px 4px 4px;border-bottom:1px solid var(--line);margin-bottom:2px}
+  .group{font-size:17px;font-weight:700;color:var(--text);scroll-margin-top:76px;
+    padding:20px 4px 8px;border-bottom:1px solid var(--line);margin:0 0 2px}
   .note{font-size:15px;color:var(--muted);line-height:1.6;
     padding:2px 12px;border-inline-start:2px dashed var(--line);margin:0 4px}
-  .shot{display:block;width:100%;max-width:100%;height:auto;border-radius:12px;
-    border:1px solid var(--line);margin:2px 0}
+  .photo{display:flex;align-items:center;gap:14px;width:100%;padding:8px;border:1px solid var(--line);
+    border-radius:12px;background:var(--surface-2);color:var(--muted);text-align:start;font:inherit;cursor:zoom-in}
+  .photo span{font-size:13px;line-height:1.6}
+  .shot{display:block;width:116px;max-width:40%;height:76px;object-fit:contain;border-radius:8px;background:var(--bg)}
   .step{
     display:flex;align-items:flex-start;gap:12px;width:100%;text-align:start;
     background:var(--surface);border:1px solid var(--line);border-radius:14px;
     padding:15px 14px;min-height:62px;color:var(--text);
     font-family:inherit;font-size:17px;line-height:1.5;cursor:pointer;box-shadow:var(--shadow);
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color:transparent;scroll-margin-top:76px;
   }
   .step .mark{flex:0 0 26px;width:26px;height:26px;border-radius:9px;border:2px solid var(--line);
     display:grid;place-items:center;margin-top:1px;color:transparent;font-size:15px;font-weight:700}
@@ -90,14 +96,14 @@
   .step.now{border-color:var(--accent);background:var(--accent-soft)}
   .step.now .mark{border-color:var(--accent)}
   .step.done{background:var(--surface-2)}
-  .step.done .txt,.step.done .num{opacity:.5}
+  .step.done .txt,.step.done .num{color:var(--muted)}
   .step.done .mark{background:var(--done);border-color:var(--done);color:#fff;animation:pop .18s ease-out}
   @keyframes pop{from{transform:scale(.7)}to{transform:scale(1)}}
   @media (prefers-reduced-motion: reduce){
     .step.done .mark{animation:none}
     .dome .fill{transition:none}
   }
-  .step:focus-visible,.tab:focus-visible,.icon-btn:focus-visible,.btn:focus-visible{
+  :focus-visible{
     outline:2px solid var(--accent);outline-offset:2px}
 
   .empty{background:var(--surface);border:1px dashed var(--line);border-radius:16px;
@@ -107,8 +113,8 @@
 
   .bar{position:fixed;inset-inline:0;bottom:0;background:var(--surface);
     border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));
-    display:flex;gap:8px;align-items:center;max-width:620px;margin:0 auto}
-  .bar .status{margin-inline-end:auto;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+    display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;max-width:620px;margin:0 auto;z-index:6}
+  .bar .status{grid-column:1/-1;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
   .btn{font-family:inherit;font-size:15px;font-weight:600;padding:11px 16px;border-radius:12px;
     border:1px solid var(--line);background:var(--surface-2);color:var(--text);cursor:pointer}
   .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -118,37 +124,63 @@
   }
   .btn.warn{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
 
-  .editor{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;
-    flex-direction:column;padding:14px 14px calc(14px + env(safe-area-inset-bottom))}
-  .editor.open{display:flex}
+  dialog{color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:18px;
+    max-width:calc(100% - 24px);max-height:calc(100dvh - 24px);padding:20px}
+  dialog::backdrop{background:rgba(10,13,34,.7)}
+  body:has(dialog[open]){overflow:hidden}
+  .editor{position:fixed;inset:0;background:var(--bg);width:620px;height:calc(100dvh - 24px);
+    padding:18px;flex-direction:column}
+  .editor[open]{display:flex}
   .editor h2{font-size:18px;margin:4px 0 4px}
   .editor .hint{font-size:14px;color:var(--muted);margin:0 0 10px;line-height:1.6}
-  .editor textarea{flex:1;width:100%;resize:none;border:1px solid var(--line);border-radius:14px;
+  .editor textarea{flex:1;min-height:100px;width:100%;resize:none;border:1px solid var(--line);border-radius:14px;
     background:var(--surface);color:var(--text);padding:14px;font-family:inherit;
     font-size:16px;line-height:1.7;direction:rtl}
-  .editor .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-  .editor .row .btn{flex:1;min-width:84px}
-  .toast{position:fixed;bottom:96px;inset-inline:0;margin:0 auto;width:max-content;max-width:90%;
+  .editor .row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+  .editor .row .btn{min-width:0;padding-inline:8px}
+  @media(max-width:500px){.editor .row{grid-template-columns:repeat(2,1fr)}}
+  .toast{position:fixed;bottom:136px;inset-inline:0;margin:0 auto;width:max-content;max-width:90%;
     background:var(--text);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:14px;
     opacity:0;pointer-events:none;transition:opacity .2s;z-index:30}
   .toast.show{opacity:.95}
   .device-help{margin:12px 0;color:var(--muted);font-size:13px;line-height:1.7}
   .device-help summary{cursor:pointer;padding:8px 0}
   .device-help p{margin:6px 0}
+  .section-jump{display:flex;align-items:center;gap:10px;padding:8px 0 4px;font-size:14px;color:var(--muted)}
+  .section-jump select{flex:1;min-width:0;min-height:44px;font:inherit;color:var(--text);background:var(--surface);
+    border:1px solid var(--line);border-radius:10px;padding:8px}
+  .dialog-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+  .dialog-actions .btn{flex:1}
+  .confirm{width:400px}
+  .confirm h2{font-size:20px;margin:0 0 8px}
+  .confirm p{font-size:15px;color:var(--muted);margin:0}
+  .image-viewer{width:1000px;padding:12px;overflow:auto}
+  .viewer-toolbar{position:sticky;top:-12px;display:flex;align-items:center;gap:8px;background:var(--surface);padding:8px 0;z-index:1}
+  .viewer-toolbar h2{flex:1;min-width:0;margin:0;font-size:16px}
+  .image-canvas{overflow:auto;max-height:70dvh;text-align:center;direction:ltr}
+  .image-canvas img{max-width:100%;max-height:65dvh;object-fit:contain}
+  .image-canvas.zoomed img{max-width:none;max-height:none}
+  .btn:disabled{opacity:.55;cursor:default}
+  @media(min-width:900px){.wrap,.bar{max-width:780px}.progress-summary{padding-block:22px}.shot{width:140px;height:90px}}
+  @media(max-width:360px){.bar .btn{padding-inline:10px}.progress-summary{gap:10px}.dome{width:88px;flex-basis:88px}}
+  @media(max-height:650px){
+    .progress-summary{padding-block:8px}.progress-copy p{display:none}
+    .device-help{margin-block:4px}.group{padding-top:12px}
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
+<main class="wrap">
   <header>
-    <div class="brand">قائمة القبة<span id="subtitle">قائمة التشغيل</span></div>
-    <button class="icon-btn" id="wakeBtn" aria-pressed="false" title="إبقاء الشاشة مفتوحة" hidden>☀</button>
-    <button class="icon-btn" id="themeBtn" title="تبديل الإضاءة">◐</button>
+    <h1 class="brand">قائمة القبة<span id="subtitle">قائمة التشغيل</span></h1>
+    <button class="icon-btn" id="wakeBtn" aria-label="إبقاء الشاشة مفتوحة" aria-pressed="false" title="إبقاء الشاشة مفتوحة" hidden>☀</button>
+    <button class="icon-btn" id="themeBtn" aria-label="تبديل الإضاءة" title="تبديل الإضاءة">◐</button>
   </header>
 
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" aria-selected="true" data-mode="start">تشغيل</button>
-    <button class="tab" role="tab" aria-selected="false" data-mode="stop">إغلاق</button>
-    <button class="tab" role="tab" aria-selected="false" data-mode="shows">الأفلام</button>
+  <div class="tabs" role="tablist" aria-label="قوائم القبة">
+    <button class="tab" id="tab-start" role="tab" aria-controls="list" aria-selected="true" data-mode="start">تشغيل</button>
+    <button class="tab" id="tab-stop" role="tab" aria-controls="list" tabindex="-1" aria-selected="false" data-mode="stop">إغلاق</button>
+    <button class="tab" id="tab-shows" role="tab" aria-controls="list" tabindex="-1" aria-selected="false" data-mode="shows">الأفلام</button>
   </div>
 
   <details class="device-help">
@@ -159,6 +191,8 @@
     <button class="btn" id="installBtn" hidden>تثبيت على الجهاز</button>
   </details>
 
+  <div class="progress-summary">
+  <div class="progress-copy"><strong id="progressText" role="status" aria-live="polite"></strong><p>اضغط على الخطوة بعد تنفيذها. تقدمك محفوظ على هذا الجهاز.</p></div>
   <svg class="dome" viewBox="0 0 200 118" aria-hidden="true">
     <path class="track" d="M14 100 A 86 86 0 0 1 186 100"/>
     <path class="fill" id="domeFill" d="M14 100 A 86 86 0 0 1 186 100"/>
@@ -166,29 +200,41 @@
     <text class="count" id="domeCount" x="100" y="84" text-anchor="middle">0/0</text>
     <text class="caption" id="domeCaption" x="100" y="99" text-anchor="middle">خطوة</text>
   </svg>
+  </div>
 
-  <div class="list" id="list"></div>
-</div>
+  <div class="section-jump"><label for="sectionSelect">انتقل إلى قسم</label><select id="sectionSelect" aria-label="انتقل إلى قسم"></select></div>
+  <div class="list" id="list" role="tabpanel" aria-labelledby="tab-start" tabindex="0"></div>
+</main>
 
 <div class="bar">
   <div class="status" id="status"></div>
-  <button class="btn" id="editBtn">تعديل</button>
-  <button class="btn warn" id="resetBtn">تصفير</button>
+  <button class="btn primary" id="nextBtn">الخطوة التالية</button>
+  <button class="btn" id="editBtn" aria-haspopup="dialog">تعديل</button>
+  <button class="btn warn" id="resetBtn" aria-haspopup="dialog">بدء جديد</button>
 </div>
 
-<div class="editor" id="editor">
+<dialog class="editor" id="editor" aria-labelledby="editorTitle" aria-describedby="editorHint">
   <h2 id="editorTitle">خطوات التشغيل</h2>
-  <p class="hint">كل سطر = خطوة. السطر اللي يبدأ بـ # يبقى عنوان قسم، واللي يبدأ بـ &gt; يبقى ملحوظة. سطر «!صورة 1» يمثل صورة: انقله مع خطوته، أو احذفه لإزالة الصورة.</p>
-  <textarea id="editorText" spellcheck="false"></textarea>
+  <p class="hint" id="editorHint">التعديلات تخص هذا الجهاز فقط. تغيير الخطوات يبدأ تقدم هذه القائمة من جديد. كل سطر = خطوة؛ # عنوان قسم؛ &gt; ملحوظة. انقل «!صورة 1» مع خطوتها أو احذف السطر لإزالة الصورة.</p>
+  <textarea id="editorText" aria-labelledby="editorTitle" aria-describedby="editorHint" spellcheck="false"></textarea>
+  <p class="hint" id="editorStatus" role="status"></p>
   <div class="row">
     <button class="btn" id="copyBtn">نسخ</button>
-    <button class="btn" id="restoreBtn">الأصلي</button>
-    <button class="btn" id="cancelBtn">رجوع</button>
+    <button class="btn" id="restoreBtn">استعادة الأصل</button>
+    <button class="btn" id="cancelBtn">إلغاء</button>
     <button class="btn primary" id="saveBtn">حفظ</button>
   </div>
-</div>
+</dialog>
 
-<div class="toast" id="toast"></div>
+<dialog class="confirm" id="confirmDialog" aria-labelledby="confirmTitle" aria-describedby="confirmText">
+  <h2 id="confirmTitle"></h2><p id="confirmText"></p>
+  <div class="dialog-actions"><button class="btn" id="confirmCancel" autofocus>إلغاء</button><button class="btn warn" id="confirmAccept">تأكيد</button></div>
+</dialog>
+<dialog class="image-viewer" id="imageViewer" aria-labelledby="imageTitle">
+  <div class="viewer-toolbar"><h2 id="imageTitle">صورة مرجعية</h2><button class="btn" id="zoomImage" aria-pressed="false">تكبير</button><button class="btn" id="closeImage" autofocus>إغلاق</button></div>
+  <div class="image-canvas" id="imageCanvas"><img id="fullImage" alt=""></div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function(){
@@ -340,7 +386,10 @@
     try{ var v=localStorage.getItem(key); return v?JSON.parse(v):fallback; }
     catch(e){ return fallback; }
   }
-  function save(key,val){ try{ localStorage.setItem(key,JSON.stringify(val)); }catch(e){} }
+  function save(key,val){
+    try{ localStorage.setItem(key,JSON.stringify(val)); return true; }
+    catch(e){ return false; }
+  }
 
   var edits = load(K_STEPS,{});
   if(typeof edits!=="object"||edits===null) edits={};
@@ -350,7 +399,7 @@
 
   function textFor(m){ return typeof edits[m]==="string" ? edits[m] : DEF[m]; }
 
-  var mode="start";
+  var mode="start", progressSaved=true;
 
   function parse(text){
     var out=[], lines=String(text||"").split(/\r?\n/);
@@ -376,7 +425,11 @@
     editorText:document.getElementById("editorText"),
     editorTitle:document.getElementById("editorTitle"),
     toast:document.getElementById("toast"),
-    resetBtn:document.getElementById("resetBtn")
+    resetBtn:document.getElementById("resetBtn"),
+    nextBtn:document.getElementById("nextBtn"),
+    progressText:document.getElementById("progressText"),
+    sections:document.getElementById("sectionSelect"),
+    editorStatus:document.getElementById("editorStatus")
   };
 
   var ARC = el.fill.getTotalLength ? el.fill.getTotalLength() : 270;
@@ -385,21 +438,19 @@
 
   var toastTimer=null;
   function toast(msg){
+    if(el.editor.open) el.editorStatus.textContent=msg;
     el.toast.textContent=msg; el.toast.classList.add("show");
     clearTimeout(toastTimer);
-    toastTimer=setTimeout(function(){ el.toast.classList.remove("show"); },1700);
+    toastTimer=setTimeout(function(){ el.toast.classList.remove("show"); },3500);
   }
 
   function render(){
     var items=parse(textFor(mode));
-    var checks=prog[mode];
     el.subtitle.textContent=LABELS[mode].sub;
     el.list.innerHTML="";
-
-    var total=0, done=0, stepIdx=-1, currentFound=false;
-    for(var i=0;i<items.length;i++){
-      if(items[i].kind==="step"){ total++; if(checks[i]) done++; }
-    }
+    el.list.setAttribute("aria-labelledby","tab-"+mode);
+    el.sections.innerHTML='<option value="">اختر القسم</option>';
+    var stepIdx=-1, imageContext=LABELS[mode].sub;
 
     if(!items.length){
       var e=document.createElement("div");
@@ -415,8 +466,12 @@
     for(var k=0;k<items.length;k++){
       var it=items[k];
       if(it.kind==="head"){
-        var h=document.createElement("div");
+        var h=document.createElement("h2");
         h.className="group"; h.textContent=it.text;
+        h.id="group-"+k; h.tabIndex=-1;
+        var option=document.createElement("option");
+        option.value=h.id; option.textContent=it.text; el.sections.appendChild(option);
+        imageContext=it.text;
         el.list.appendChild(h); continue;
       }
       if(it.kind==="note"){
@@ -428,39 +483,67 @@
         if(it.text.indexOf("data:image/")===0){
           var im=document.createElement("img");
           im.className="shot"; im.src=it.text; im.alt=""; im.loading="lazy";
-          el.list.appendChild(im);
+          var photo=document.createElement("button");
+          photo.type="button"; photo.className="photo";
+          photo.setAttribute("aria-label","عرض صورة: "+imageContext);
+          photo.setAttribute("aria-haspopup","dialog");
+          photo.dataset.caption=imageContext;
+          photo.appendChild(im);
+          var caption=document.createElement("span");
+          caption.textContent="صورة مرجعية · اضغط للتكبير";
+          photo.appendChild(caption); el.list.appendChild(photo);
         }
         continue;
       }
       stepIdx++;
-      var isDone=!!checks[k];
       var row=document.createElement("button");
-      row.className="step"+(isDone?" done":"");
-      if(!isDone && !currentFound){ row.className+=" now"; currentFound=true; }
+      row.className="step";
       row.setAttribute("role","checkbox");
-      row.setAttribute("aria-checked",isDone?"true":"false");
       row.dataset.i=k;
-      row.innerHTML='<span class="mark">✓</span><span class="num">'+(stepIdx+1)+'</span><span class="txt"></span>';
+      row.innerHTML='<span class="mark" aria-hidden="true">✓</span><span class="num">'+(stepIdx+1)+'</span><span class="txt"></span>';
       row.querySelector(".txt").textContent=it.text;
+      imageContext=it.text;
       el.list.appendChild(row);
     }
+    el.sections.parentElement.hidden=el.sections.options.length===1;
+    updateProgress();
+  }
 
+  function updateProgress(){
+    var rows=el.list.querySelectorAll(".step"), total=rows.length, done=0, currentFound=false;
+    rows.forEach(function(row){
+      var checked=!!prog[mode][Number(row.dataset.i)];
+      row.setAttribute("aria-checked",String(checked));
+      row.classList.toggle("done",checked);
+      row.classList.toggle("now",!checked && !currentFound);
+      if(checked) done++; else currentFound=true;
+    });
     var pct = total ? done/total : 0;
     el.fill.style.strokeDashoffset = ARC*(1-pct);
     el.fill.classList.toggle("complete", total>0 && done===total);
     el.count.textContent = done+"/"+total;
     el.caption.textContent = (total>0 && done===total) ? "خلصت" : "خطوة";
     el.status.textContent = total ? (done===total ? "كل الخطوات اتعملت" : "باقي "+(total-done)) : "";
-    el.resetBtn.textContent="تصفير"; el.resetBtn.dataset.armed="";
+    if(!progressSaved) el.status.textContent="التقدم غير محفوظ. لا تغلق الصفحة قبل إتاحة مساحة للحفظ.";
+    el.progressText.textContent=total && done===total ? "اكتملت كل الخطوات" : "تم "+done+" من "+total+" خطوة";
+    el.resetBtn.disabled=done===0;
+    el.nextBtn.disabled=done===total;
+    el.nextBtn.textContent=total && done===total ? "اكتملت القائمة" : "الخطوة التالية";
   }
 
   el.list.addEventListener("click",function(ev){
     var row=ev.target.closest(".step");
-    if(!row) return;
+    if(!row){
+      var photo=ev.target.closest(".photo");
+      if(photo) openImage(photo);
+      return;
+    }
     var i=Number(row.dataset.i);
     prog[mode][i]=!prog[mode][i];
-    save(K_PROG,prog);
-    render();
+    progressSaved=save(K_PROG,prog);
+    if(!progressSaved) toast("تعذر حفظ التقدم. سيُفقد عند إغلاق الصفحة.");
+    // Update in place so keyboard focus, scroll position and loaded pictures stay put.
+    updateProgress();
   });
 
   Array.prototype.forEach.call(document.querySelectorAll(".tab"),function(t){
@@ -468,27 +551,73 @@
       mode=t.dataset.mode;
       Array.prototype.forEach.call(document.querySelectorAll(".tab"),function(o){
         o.setAttribute("aria-selected", o===t ? "true":"false");
+        o.tabIndex=o===t ? 0 : -1;
       });
       window.scrollTo(0,0);
       render();
     });
+    t.addEventListener("keydown",function(ev){
+      var tabs=Array.from(document.querySelectorAll(".tab")), index=tabs.indexOf(t);
+      if(ev.key==="ArrowLeft") index=(index+1)%tabs.length;
+      else if(ev.key==="ArrowRight") index=(index+tabs.length-1)%tabs.length;
+      else if(ev.key==="Home") index=0;
+      else if(ev.key==="End") index=tabs.length-1;
+      else return;
+      ev.preventDefault(); tabs[index].click(); tabs[index].focus();
+    });
   });
 
+  function goTo(target){
+    if(!target) return;
+    target.focus({preventScroll:true});
+    target.scrollIntoView({block:"start",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+  }
+  el.nextBtn.addEventListener("click",function(){ goTo(el.list.querySelector(".step.now")); });
+  el.sections.addEventListener("change",function(){ goTo(document.getElementById(el.sections.value)); });
+
+  var confirmDialog=document.getElementById("confirmDialog"), confirmAction=null;
+  function confirmChange(title,message,label,action){
+    document.getElementById("confirmTitle").textContent=title;
+    document.getElementById("confirmText").textContent=message;
+    document.getElementById("confirmAccept").textContent=label;
+    confirmAction=action; confirmDialog.showModal();
+    document.getElementById("confirmCancel").focus();
+  }
+  document.getElementById("confirmCancel").addEventListener("click",function(){ confirmDialog.close(); });
+  document.getElementById("confirmAccept").addEventListener("click",function(){
+    var action=confirmAction; confirmAction=null; confirmDialog.close();
+    if(action) action();
+  });
+  confirmDialog.addEventListener("close",function(){ confirmAction=null; });
   el.resetBtn.addEventListener("click",function(){
-    if(el.resetBtn.dataset.armed!=="1"){
-      el.resetBtn.dataset.armed="1";
-      el.resetBtn.textContent="متأكد؟";
-      setTimeout(function(){
-        if(el.resetBtn.dataset.armed==="1"){
-          el.resetBtn.dataset.armed=""; el.resetBtn.textContent="تصفير";
-        }
-      },2600);
-      return;
-    }
-    prog[mode]=[]; save(K_PROG,prog); render(); toast("اتصفرت");
+    confirmChange("بدء "+LABELS[mode].sub+" من جديد؟","سيتم مسح علامات الإنجاز لهذه القائمة فقط. الخطوات والصور لن تتغير.","مسح العلامات",function(){
+      var updated=Object.assign({},prog); updated[mode]=[];
+      if(!save(K_PROG,updated)){ toast("تعذر حفظ التغيير. لم تُمسح العلامات."); return; }
+      prog=updated; progressSaved=true; updateProgress(); el.nextBtn.focus(); toast("القائمة جاهزة للبدء من جديد");
+    });
   });
 
-  var editorImages=[];
+  var imageViewer=document.getElementById("imageViewer"), imageCanvas=document.getElementById("imageCanvas");
+  var fullImage=document.getElementById("fullImage"), zoomImage=document.getElementById("zoomImage");
+  var imageOpener=null;
+  function openImage(photo){
+    imageOpener=photo;
+    fullImage.src=photo.querySelector("img").src;
+    fullImage.alt=photo.dataset.caption;
+    imageCanvas.classList.remove("zoomed");
+    zoomImage.setAttribute("aria-pressed","false"); zoomImage.textContent="تكبير";
+    imageViewer.showModal(); imageCanvas.scrollTo(0,0);
+  }
+  zoomImage.addEventListener("click",function(){
+    var zoomed=imageCanvas.classList.toggle("zoomed");
+    zoomImage.setAttribute("aria-pressed",String(zoomed)); zoomImage.textContent=zoomed ? "ملاءمة الشاشة" : "تكبير";
+  });
+  document.getElementById("closeImage").addEventListener("click",function(){ imageViewer.close(); });
+  imageViewer.addEventListener("close",function(){
+    if(imageOpener && imageOpener.isConnected) imageOpener.focus({preventScroll:true});
+  });
+
+  var editorImages=[], editorOpener=null;
   function setEditorText(text){
     editorImages=[];
     // Keep large embedded pictures out of the textarea, especially on mobile Safari.
@@ -502,38 +631,59 @@
       return editorImages[Number(number)-1] ? "!"+editorImages[Number(number)-1] : line;
     });
   }
-  function openEditor(){
+  function openEditor(ev){
+    editorOpener=ev && ev.currentTarget;
     el.editorTitle.textContent=LABELS[mode].editor;
     setEditorText(textFor(mode));
-    el.editor.classList.add("open");
+    el.editorStatus.textContent="";
+    el.editor.showModal();
+    el.editorText.setSelectionRange(0,0);
+    el.editorText.scrollTop=0;
+  }
+  function closeEditor(){
+    if(expandedEditorText()===textFor(mode)){ el.editor.close(); return; }
+    confirmChange("تجاهل التعديلات؟","لديك تعديلات لم تُحفظ. هل تريد إغلاق المحرر بدون حفظ؟","تجاهل التعديلات",function(){ el.editor.close(); });
   }
   document.getElementById("editBtn").addEventListener("click",openEditor);
-  document.getElementById("cancelBtn").addEventListener("click",function(){
-    el.editor.classList.remove("open");
+  document.getElementById("cancelBtn").addEventListener("click",closeEditor);
+  el.editor.addEventListener("cancel",function(ev){ ev.preventDefault(); closeEditor(); });
+  el.editor.addEventListener("close",function(){
+    var opener=editorOpener && editorOpener.isConnected ? editorOpener : document.getElementById("editBtn");
+    opener.focus({preventScroll:true});
   });
   document.getElementById("saveBtn").addEventListener("click",function(){
     var updatedText=expandedEditorText();
-    if(updatedText!==textFor(mode)){
-      prog[mode]=[];
-      save(K_PROG,prog);
+    var changed=updatedText!==textFor(mode);
+    var updatedEdits=Object.assign({},edits), updatedProg=Object.assign({},prog);
+    updatedEdits[mode]=updatedText;
+    if(changed) updatedProg[mode]=[];
+    if(!save(K_STEPS,updatedEdits)){
+      toast("تعذر الحفظ. التعديلات ما زالت هنا؛ انسخها قبل الإغلاق."); return;
     }
-    edits[mode]=updatedText;
-    save(K_STEPS,edits);
-    el.editor.classList.remove("open");
+    if(changed && !save(K_PROG,updatedProg)){
+      save(K_STEPS,edits);
+      toast("تعذر حفظ التقدم الجديد. التعديلات ما زالت في المحرر."); return;
+    }
+    edits=updatedEdits; prog=updatedProg;
+    if(changed) progressSaved=true;
+    el.editor.close();
     render(); toast("اتحفظت");
   });
   document.getElementById("restoreBtn").addEventListener("click",function(){
-    setEditorText(DEF[mode]);
-    toast("رجعت للنسخة الأصلية — اضغط حفظ");
+    confirmChange("استعادة الخطوات الأصلية؟","سيتم استبدال نص المحرر بالنسخة الأصلية. لن تتغير القائمة إلا بعد الضغط على حفظ.","استعادة الأصل",function(){
+      setEditorText(DEF[mode]); toast("تمت استعادة الأصل في المحرر. اضغط حفظ لتطبيقه.");
+    });
   });
   document.getElementById("copyBtn").addEventListener("click",function(){
     var t=expandedEditorText();
     function fallbackCopy(){
-      var compactText=el.editorText.value;
-      el.editorText.value=t;
-      el.editorText.select();
-      try{ document.execCommand("copy"); toast("اتنسخت"); }catch(e){ toast("انسخها يدوي"); }
-      el.editorText.value=compactText;
+      var copy=document.createElement("textarea");
+      copy.value=t; copy.readOnly=true;
+      copy.style.cssText="position:fixed;width:1px;height:1px;opacity:0;white-space:pre";
+      el.editor.appendChild(copy); copy.select();
+      try{ toast(document.execCommand("copy") ? "اتنسخت" : "تعذر النسخ. جرّب متصفحًا آخر."); }
+      catch(e){ toast("تعذر النسخ. جرّب متصفحًا آخر."); }
+      copy.remove(); el.editorText.focus();
     }
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(t).then(function(){toast("اتنسخت");},fallbackCopy);
