@@ -4,7 +4,7 @@ const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
 const prefix = "/planetarium_op/";
-const allowed = new Set(["index.html", "install.js", "sw.js", "manifest.webmanifest",
+const allowed = new Set(["index.html", "classic.html", "install.js", "sw.js", "manifest.webmanifest", "manifest-classic.webmanifest",
   "icons/dome.svg", "icons/icon-192.png", "icons/icon-512.png"]);
 const types = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
   ".webmanifest": "application/manifest+json", ".svg": "image/svg+xml", ".png": "image/png", ".webp": "image/webp" };

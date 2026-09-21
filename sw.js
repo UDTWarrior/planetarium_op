@@ -2,9 +2,9 @@
 
 // Bump this version whenever a deployed application file changes.
 const CACHE_PREFIX = "planetarium-op-";
-const CACHE_NAME = CACHE_PREFIX + "v5";
+const CACHE_NAME = CACHE_PREFIX + "v6";
 const ROOT = new URL("./", self.location.href);
-const SHELL = ["./", "./index.html", "./install.js", "./manifest.webmanifest",
+const SHELL = ["./", "./index.html", "./classic.html", "./install.js", "./manifest.webmanifest", "./manifest-classic.webmanifest",
   "./icons/dome.svg", "./icons/icon-192.png", "./icons/icon-512.png",
   ...Array.from({ length: 17 }, (_, i) => "./images/reference-" + String(i + 1).padStart(2, "0") + ".webp")];
 
@@ -26,7 +26,10 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET" || url.origin !== ROOT.origin || !url.pathname.startsWith(ROOT.pathname)) return;
 
   if (event.request.mode === "navigate") {
-    event.respondWith(fetch(event.request).catch(() => caches.match(new URL("index.html", ROOT).href)));
+    event.respondWith(fetch(event.request).catch(async () => {
+      const page = url.pathname === new URL("classic.html", ROOT).pathname ? "classic.html" : "index.html";
+      return (await caches.match(new URL(page, ROOT).href)) || Response.error();
+    }));
     return;
   }
 

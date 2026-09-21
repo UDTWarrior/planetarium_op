@@ -6,6 +6,14 @@ or a Claude account.
 
 Website: [قائمة التشغيل الخاصة بالقبة](https://udtwarrior.github.io/planetarium_op/)
 
+Previous UI: [Classic checklist](https://udtwarrior.github.io/planetarium_op/classic.html)
+
+The classic page preserves the pre-redesign layout with full-size inline photos.
+Both pages use the latest image files and share this browser's saved edits, progress,
+and theme. The classic page also works offline and has its own installation start URL.
+When updating default checklist text or image order, keep the `DEF` data in
+`index.html` and `classic.html` identical so saved checkmarks stay aligned between them.
+
 Repository: [UDTWarrior/planetarium_op](https://github.com/UDTWarrior/planetarium_op)
 
 ## Use
