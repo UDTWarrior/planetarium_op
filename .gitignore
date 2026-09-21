@@ -1,0 +1,11 @@
+.chrome-headless/
+.edge-temp/
+.tools/
+node_modules/
+playwright-report/
+test-results/
+.env
+.env.*
+!.env.example
+Thumbs.db
+.DS_Store
