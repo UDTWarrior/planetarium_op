@@ -46,6 +46,8 @@ npm test
 GitHub Pages serves the root of the `main` branch. `.nojekyll` keeps the files as
 plain static assets. All application paths are relative to support repository URLs.
 Increment `CACHE_NAME` in `sw.js` when changing deployed application files.
+The GitHub Actions verification checks that the live HTML and offline assets match
+the committed files after each push.
 
 ## Source
 

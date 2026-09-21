@@ -178,7 +178,7 @@
 
 <div class="editor" id="editor">
   <h2 id="editorTitle">خطوات التشغيل</h2>
-  <p class="hint">كل سطر = خطوة. السطر اللي يبدأ بـ # يبقى عنوان قسم، واللي يبدأ بـ &gt; يبقى ملحوظة من غير مربع اختيار.</p>
+  <p class="hint">كل سطر = خطوة. السطر اللي يبدأ بـ # يبقى عنوان قسم، واللي يبدأ بـ &gt; يبقى ملحوظة. سطر «!صورة 1» يمثل صورة: انقله مع خطوته، أو احذفه لإزالة الصورة.</p>
   <textarea id="editorText" spellcheck="false"></textarea>
   <div class="row">
     <button class="btn" id="copyBtn">نسخ</button>
@@ -488,9 +488,23 @@
     prog[mode]=[]; save(K_PROG,prog); render(); toast("اتصفرت");
   });
 
+  var editorImages=[];
+  function setEditorText(text){
+    editorImages=[];
+    // Keep large embedded pictures out of the textarea, especially on mobile Safari.
+    el.editorText.value=text.replace(/^!(data:image\/[^\r\n]+)$/gm,function(line,image){
+      editorImages.push(image);
+      return "!صورة "+editorImages.length;
+    });
+  }
+  function expandedEditorText(){
+    return el.editorText.value.replace(/^!صورة (\d+)[ \t]*$/gm,function(line,number){
+      return editorImages[Number(number)-1] ? "!"+editorImages[Number(number)-1] : line;
+    });
+  }
   function openEditor(){
     el.editorTitle.textContent=LABELS[mode].editor;
-    el.editorText.value=textFor(mode);
+    setEditorText(textFor(mode));
     el.editor.classList.add("open");
   }
   document.getElementById("editBtn").addEventListener("click",openEditor);
@@ -498,24 +512,28 @@
     el.editor.classList.remove("open");
   });
   document.getElementById("saveBtn").addEventListener("click",function(){
-    if(el.editorText.value!==textFor(mode)){
+    var updatedText=expandedEditorText();
+    if(updatedText!==textFor(mode)){
       prog[mode]=[];
       save(K_PROG,prog);
     }
-    edits[mode]=el.editorText.value;
+    edits[mode]=updatedText;
     save(K_STEPS,edits);
     el.editor.classList.remove("open");
     render(); toast("اتحفظت");
   });
   document.getElementById("restoreBtn").addEventListener("click",function(){
-    el.editorText.value=DEF[mode];
+    setEditorText(DEF[mode]);
     toast("رجعت للنسخة الأصلية — اضغط حفظ");
   });
   document.getElementById("copyBtn").addEventListener("click",function(){
-    var t=el.editorText.value;
+    var t=expandedEditorText();
     function fallbackCopy(){
+      var compactText=el.editorText.value;
+      el.editorText.value=t;
       el.editorText.select();
       try{ document.execCommand("copy"); toast("اتنسخت"); }catch(e){ toast("انسخها يدوي"); }
+      el.editorText.value=compactText;
     }
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(t).then(function(){toast("اتنسخت");},fallbackCopy);

@@ -1,0 +1,42 @@
+name: Verify Published Checklist
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Wait for GitHub Pages and verify the published files
+        shell: bash
+        env:
+          SITE_URL: https://udtwarrior.github.io/planetarium_op/
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error --connect-timeout 10 --max-time 30 \
+              "${SITE_URL}?verify=${GITHUB_SHA}" -o "$RUNNER_TEMP/checklist.html" \
+              && cmp --silent index.html "$RUNNER_TEMP/checklist.html"; then
+              break
+            fi
+            echo "Waiting for deployment (attempt ${attempt}/30)"
+            sleep 10
+          done
+          cmp index.html "$RUNNER_TEMP/checklist.html"
+          for asset in install.js sw.js manifest.webmanifest icons/dome.svg icons/icon-192.png icons/icon-512.png; do
+            curl --fail --silent --show-error --retry 5 --retry-delay 10 --retry-all-errors \
+              --connect-timeout 10 --max-time 30 \
+              "${SITE_URL}${asset}?verify=${GITHUB_SHA}" -o "$RUNNER_TEMP/checklist-asset"
+            cmp "$asset" "$RUNNER_TEMP/checklist-asset"
+            echo "Verified ${asset}"
+          done
+          echo "Live HTML and all offline assets match this commit."

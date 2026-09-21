@@ -40,6 +40,13 @@ test("checklists, pictures, editing and progress work across screen sizes", asyn
   await expect(first).toHaveAttribute("aria-checked", "false");
   await first.click();
   await page.locator("#editBtn").click();
+  expect((await page.locator("#editorText").inputValue()).length).toBeLessThan(10000);
+  expect(await page.locator("#editorText").inputValue()).not.toContain("base64,");
+  const imageCount = await page.locator(".shot").count();
+  await page.locator("#saveBtn").click();
+  await expect(first).toHaveAttribute("aria-checked", "true");
+  await expect(page.locator(".shot")).toHaveCount(imageCount);
+  await page.locator("#editBtn").click();
   await page.locator("#editorText").fill("# تجربة\nخطوة جديدة\nخطوة ثانية");
   await page.locator("#saveBtn").click();
   await expect(page.getByRole("checkbox")).toHaveCount(2);
