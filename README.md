@@ -14,7 +14,7 @@ Open the deployed site on a phone, tablet, or computer. On Android, use the brow
 Install app / Add to Home Screen command. On iPhone or iPad, open it in Safari and
 choose Share > Add to Home Screen.
 
-After the first successful online load, the checklist and embedded pictures are
+After the first successful online load, the checklist and reference pictures are
 cached for offline use. The optional Google font needs internet; an Arabic system
 font is used when it is unavailable.
 
@@ -31,6 +31,25 @@ The shutdown list retains the original note identifying steps inferred from the
 startup sequence. The equipment instructions have not been independently verified.
 
 ## Development
+
+### Editing Photos
+
+The website loads `images/reference-01.webp` through `reference-17.webp` directly.
+Edit these files in Photoshop and export over the same filename with transparency
+enabled. Refresh the page to load the edited files. No Base64 replacement is needed.
+The image elements do not paint a background; transparent pixels show the surrounding
+card or viewer color (use dark mode to distinguish transparency from white pixels).
+
+The online app revalidates images and keeps the latest successful copy for offline
+use. Publish image changes to GitHub for other devices to see them; local edits alone
+do not update the hosted site. Keep layered Photoshop originals separately.
+
+PNG paths are also supported. If changing filenames or formats, update the `!images/…`
+lines in `index.html`, the precache list in `sw.js`, and the deployment verifier.
+Existing saved lists automatically replace recognized old embedded photos with the
+new file paths, without changing custom instructions, custom pictures or checkmarks.
+
+### Local Testing
 
 Open `index.html` directly for basic use. To test installation and offline support:
 
@@ -58,4 +77,5 @@ the committed files after each push.
 
 Imported from the [shared Claude conversation](https://claude.ai/share/d2e1ec88-6f38-4f27-b79a-ab1c01d91b97)
 and its published HTML artifact. Claude's injected hosting runtime was removed to
-make the app independent. The app includes the original embedded equipment images.
+make the app independent. Equipment images were extracted into editable files; some
+have since been edited to remove their backgrounds.

@@ -7,7 +7,7 @@ const prefix = "/planetarium_op/";
 const allowed = new Set(["index.html", "install.js", "sw.js", "manifest.webmanifest",
   "icons/dome.svg", "icons/icon-192.png", "icons/icon-512.png"]);
 const types = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
-  ".webmanifest": "application/manifest+json", ".svg": "image/svg+xml", ".png": "image/png" };
+  ".webmanifest": "application/manifest+json", ".svg": "image/svg+xml", ".png": "image/png", ".webp": "image/webp" };
 
 http.createServer(async (req, res) => {
   const url = new URL(req.url, "http://localhost");
@@ -17,7 +17,7 @@ http.createServer(async (req, res) => {
     return;
   }
   const file = url.pathname.startsWith(prefix) ? url.pathname.slice(prefix.length) || "index.html" : "";
-  if (!allowed.has(file)) {
+  if (!allowed.has(file) && !/^images\/[a-zA-Z0-9_-]+\.(?:webp|png)$/.test(file)) {
     res.writeHead(404);
     res.end("Not found");
     return;

@@ -164,5 +164,15 @@ test("installed shell and images remain usable offline at the repository URL", a
   const picture = page.locator(".shot").first();
   await picture.scrollIntoViewIfNeeded();
   expect(await picture.evaluate(async (image) => { await image.decode(); return image.naturalWidth; })).toBeGreaterThan(0);
+  for (const mode of ["start", "stop", "shows"]) {
+    await page.locator(`[data-mode="${mode}"]`).click();
+    expect(await page.locator(".shot").evaluateAll(async images => {
+      return Promise.all(images.map(async image => {
+        image.loading = "eager";
+        await image.decode();
+        return image.naturalWidth > 0;
+      }));
+    })).not.toContain(false);
+  }
   await expect(page.locator("#offlineStatus")).toContainText("جاهزة");
 });
