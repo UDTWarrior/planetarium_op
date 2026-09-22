@@ -2,6 +2,31 @@ const { test, expect } = require("@playwright/test");
 const fs = require("node:fs");
 const path = require("node:path");
 
+test("photo captions are bold and readable in both themes on narrow screens", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.goto("./");
+  for (const theme of ["light", "dark"]) {
+    await page.evaluate(theme => document.documentElement.setAttribute("data-theme", theme), theme);
+    const caption = page.locator(".photo span").first();
+    await expect(caption).toHaveText("صورة مرجعية · اضغط للتكبير");
+    const appearance = await caption.evaluate(element => {
+      const style = getComputedStyle(element);
+      const background = getComputedStyle(element.closest(".photo")).backgroundColor;
+      const luminance = color => color.match(/[\d.]+/g).slice(0, 3).map(Number)
+        .map(value => value / 255)
+        .map(value => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4)
+        .reduce((sum, value, index) => sum + value * [0.2126, 0.7152, 0.0722][index], 0);
+      const a = luminance(style.color), b = luminance(background);
+      return { weight: style.fontWeight, size: style.fontSize,
+        contrast: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05) };
+    });
+    expect(appearance.weight).toBe("700");
+    expect(appearance.size).toBe("14px");
+    expect(appearance.contrast).toBeGreaterThan(7);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+});
+
 test("saved checklists replace original embedded photos without losing edits or progress", async ({ page }) => {
   const legacy = "data:image/webp;base64," + fs.readFileSync(path.join(__dirname, "fixtures/legacy-reference-10.webp")).toString("base64");
   const custom = "data:image/png;base64," + fs.readFileSync(path.join(__dirname, "../icons/icon-192.png")).toString("base64");
@@ -48,14 +73,15 @@ test("edited photos load from disk with alpha intact and no painted thumbnail ba
       }));
     });
     for (const result of results) {
-      expect(result.src).toMatch(/^images\/reference-\d{2}\.webp$/);
+      expect(result.src).toMatch(/^images\/(?:reference-\d{2}|Shows_(?:Trailers|scriptvisits|Arabic|English))\.webp$/);
       expect(result.background).toBe("rgba(0, 0, 0, 0)");
       if (result.hasAlpha) transparentFiles.push(result.src);
     }
   }
-  for (const number of [10, 13, 15, 16]) expect(transparentFiles).toContain(`images/reference-${number}.webp`);
-  await page.locator('.photo:has(img[src="images/reference-13.webp"])').click();
-  await expect(page.locator("#fullImage")).toHaveAttribute("src", /\/images\/reference-13\.webp$/);
+  expect(transparentFiles).toContain("images/reference-10.webp");
+  expect(transparentFiles).toContain("images/Shows_Trailers.webp");
+  await page.locator('.photo:has(img[src="images/Shows_scriptvisits.webp"])').click();
+  await expect(page.locator("#fullImage")).toHaveAttribute("src", /\/images\/Shows_scriptvisits\.webp$/);
 });
 
 test("online image edits replace stale offline copies", async ({ page, browserName }) => {

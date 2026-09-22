@@ -35,6 +35,11 @@ checkmarks. Tap a reference photo to view it full-size and toggle zoom. Resettin
 progress, restoring defaults, and discarding unsaved edits require confirmation.
 Keyboard users can switch tabs with the arrow keys and close dialogs with Escape.
 
+In the checklist editor, start a line with `#` or `##` to give it the section-heading
+style; use `>` for an ordinary note. HTML tags such as `<b>` are not interpreted.
+The equipment-location headings are upgraded automatically in existing saved lists
+without resetting progress.
+
 The shutdown list retains the original note identifying steps inferred from the
 startup sequence. The equipment instructions have not been independently verified.
 
@@ -42,7 +47,10 @@ startup sequence. The equipment instructions have not been independently verifie
 
 ### Editing Photos
 
-The website loads `images/reference-01.webp` through `reference-17.webp` directly.
+The website loads `images/reference-01.webp` through `reference-11.webp`,
+`images/reference-14.webp`, and the four `images/Shows_*.webp` files directly.
+Saved lists automatically use the new Shows images in place of references 12, 13,
+15, 16, and 17 without changing checklist progress.
 Edit these files in Photoshop and export over the same filename with transparency
 enabled. Refresh the page to load the edited files. No Base64 replacement is needed.
 The image elements do not paint a background; transparent pixels show the surrounding

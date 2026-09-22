@@ -50,8 +50,7 @@ test("both interfaces share progress and edits without losing images", async ({ 
   await page.locator("#editorText").fill("# Shared list\nShared instruction\n!images/reference-10.webp");
   await page.locator("#saveBtn").click();
   await page.getByRole("checkbox").first().click();
-  await page.locator(".device-help summary").click();
-  await page.locator('a[href="./classic.html"]').click();
+  await page.goto("./classic.html");
   await expect(page).toHaveTitle(/الواجهة السابقة/);
   await expect(page.getByRole("checkbox").first()).toContainText("Shared instruction");
   await expect(page.getByRole("checkbox").first()).toHaveAttribute("aria-checked", "true");

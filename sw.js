@@ -2,11 +2,13 @@
 
 // Bump this version whenever a deployed application file changes.
 const CACHE_PREFIX = "planetarium-op-";
-const CACHE_NAME = CACHE_PREFIX + "v7";
+const CACHE_NAME = CACHE_PREFIX + "v9";
 const ROOT = new URL("./", self.location.href);
 const SHELL = ["./", "./index.html", "./classic.html", "./install.js", "./manifest.webmanifest", "./manifest-classic.webmanifest",
   "./icons/dome.svg", "./icons/icon-192.png", "./icons/icon-512.png",
-  ...Array.from({ length: 17 }, (_, i) => "./images/reference-" + String(i + 1).padStart(2, "0") + ".webp")];
+  ...Array.from({ length: 11 }, (_, i) => "./images/reference-" + String(i + 1).padStart(2, "0") + ".webp"),
+  "./images/reference-14.webp", "./images/Shows_Trailers.webp", "./images/Shows_scriptvisits.webp",
+  "./images/Shows_Arabic.webp", "./images/Shows_English.webp"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) =>

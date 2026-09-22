@@ -79,7 +79,7 @@
     padding:2px 12px;border-inline-start:2px dashed var(--line);margin:0 4px}
   .photo{display:flex;align-items:center;gap:14px;width:100%;padding:8px;border:1px solid var(--line);
     border-radius:12px;background:var(--surface-2);color:var(--muted);text-align:start;font:inherit;cursor:zoom-in}
-  .photo span{font-size:13px;line-height:1.6}
+  .photo span{font-size:14px;font-weight:700;color:var(--text);line-height:1.6}
   .shot{display:block;width:116px;max-width:40%;height:76px;object-fit:contain;border-radius:8px;background:transparent}
   .step{
     display:flex;align-items:flex-start;gap:12px;width:100%;text-align:start;
@@ -252,12 +252,12 @@
   "68415:b71beee4": "images/reference-09.webp",
   "47679:6c1ea930": "images/reference-10.webp",
   "86419:e9c3f19a": "images/reference-11.webp",
-  "65371:d06521c5": "images/reference-12.webp",
-  "54407:ceca1b81": "images/reference-13.webp",
+  "65371:d06521c5": "images/Shows_Trailers.webp",
+  "54407:ceca1b81": "images/Shows_scriptvisits.webp",
   "53383:65c7ea99": "images/reference-14.webp",
-  "70351:8f3b554d": "images/reference-15.webp",
-  "70219:80392336": "images/reference-16.webp",
-  "39391:8b54bdb2": "images/reference-17.webp"
+  "70351:8f3b554d": "images/Shows_Arabic.webp",
+  "70219:80392336": "images/Shows_English.webp",
+  "39391:8b54bdb2": "images/Shows_Trailers.webp"
 };
 
   var DEF = {
@@ -277,7 +277,7 @@
       "إضاءة المدخل: قاطع 15 و 16",
       "",
       "# 3 · التكييف المركزي",
-      "> لوحة الكهرباء في المخزن، على الحائط الشمال وانت داخل",
+      "## لوحة الكهرباء في المخزن، على الحائط الشمال وانت داخل",
       "افتح غطاء لوحة الكهرباء بالمفتاح",
       "وصّل كابل الشاشة في مكانه",
       "اضغط ESC في جهاز التحكم",
@@ -306,7 +306,7 @@
       "!images/reference-08.webp",
       "",
       "# 8 · إضاءة الطوارئ والسلم",
-      "> لوحة الكهرباء جوه غرفة الـ UPS، أول لوحة على اليمين",
+      "## لوحة الكهرباء جوه غرفة الـ UPS، أول لوحة على اليمين",
       "!images/reference-09.webp",
       "نور الطوارئ: قاطع 4 و 5",
       "نور السلم: قاطع 6 و 9",
@@ -366,12 +366,12 @@
       "اضغط Playlists",
       "افتح المجلد المطلوب من تحت Visits",
       "اختار العرض من القايمة على اليمين",
-      "!images/reference-12.webp",
+      "!images/Shows_Trailers.webp",
       "",
       "# Visits › ScriptVisits — الزيارة الكاملة",
       "> AAST2025ARABICOneTrailer — عربي: تريلر + مناعة + فيلم الأكاديمية (20:41)",
       "> AAST2025ENGOneTrailer — إنجليزي: تريلر + مناعة + فيلم الأكاديمية",
-      "!images/reference-13.webp",
+      "!images/Shows_scriptvisits.webp",
       "> محتوى الزيارة الكاملة بالترتيب:",
       "!images/reference-14.webp",
       "",
@@ -379,18 +379,18 @@
       "> AASTFILM2025ARABIC — فيلم الأكاديمية فقط (15:12)",
       "> Dream to Flyarabic — حلم الطيران (35:23)",
       "> ArabicAstro — محاضرة الفلك (03:53)",
-      "!images/reference-15.webp",
+      "!images/Shows_Arabic.webp",
       "",
       "# Visits › EnglishShows",
       "> AASTFILM2025ENG — فيلم الأكاديمية فقط (15:12)",
       "> Dream to Fly — حلم الطيران (35:23)",
       "> engAstro — محاضرة الفلك (05:58)",
-      "!images/reference-16.webp",
+      "!images/Shows_English.webp",
       "",
       "# Visits › Trailers",
       "> Stars of the Pharaohs Trailer (02:04)",
       "> كمان: Dream to Fly · Wonders of the Universe · Seven Wonders · Christmas Star · Realm of Light · The Last Reef · Future is Wild · Mobius · Cosmic Safari",
-      "!images/reference-17.webp"
+      "!images/Shows_Trailers.webp"
     ].join("\n")
   };
 
@@ -422,7 +422,20 @@
     for(var i=0;i<image.length;i++) hash=Math.imul(hash^image.charCodeAt(i),16777619);
     return image.length+":"+(hash>>>0).toString(16);
   }
-  // Replace only recognized original pictures, keeping custom text, images and checkmarks.
+  function upgradeImagePaths(text){
+    var replacements={"12":"Shows_Trailers","13":"Shows_scriptvisits","15":"Shows_Arabic","16":"Shows_English","17":"Shows_Trailers"};
+    return text.replace(/^([ \t]*)!(?:\.\/)?images\/reference-(12|13|15|16|17)\.webp([ \t]*)$/gm,function(line,indent,number,spacing){
+      return indent+"!images/"+replacements[number]+".webp"+spacing;
+    });
+  }
+  function upgradeLocationHeadings(text){
+    var titles=["لوحة الكهرباء في المخزن، على الحائط الشمال وانت داخل", "لوحة الكهرباء جوه غرفة الـ UPS، أول لوحة على اليمين"];
+    return text.replace(/^([ \t]*)>[ \t]*([^\r\n]+)$/gm,function(line,indent,note){
+      var title=note.trim().replace(/^<b>(.*)<\/b>$/,"$1");
+      return titles.indexOf(title)!==-1 ? indent+"## "+title : line;
+    });
+  }
+  // Migrate known photos and location headings without changing item positions or checkmarks.
   var migrated=false;
   MODES.forEach(function(m){
     if(typeof edits[m]!=="string") return;
@@ -430,6 +443,7 @@
       var file=LEGACY_IMAGES[imageKey(image)];
       return file ? indent+"!"+file : line;
     });
+    updated=upgradeLocationHeadings(upgradeImagePaths(updated));
     if(updated!==edits[m]){ edits[m]=updated; migrated=true; }
   });
   if(migrated) save(K_STEPS,edits);
