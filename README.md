@@ -47,7 +47,7 @@ startup sequence. The equipment instructions have not been independently verifie
 
 ### Editing Photos
 
-The website loads `images/reference-01.webp` through `reference-11.webp`,
+The website loads `images/reference-01.webp` through `reference-11.webp` (except 05),
 `images/reference-14.webp`, and the four `images/Shows_*.webp` files directly.
 Saved lists automatically use the new Shows images in place of references 12, 13,
 15, 16, and 17 without changing checklist progress.
@@ -63,7 +63,11 @@ do not update the hosted site. Keep layered Photoshop originals separately.
 PNG paths are also supported. If changing filenames or formats, update the `!images/…`
 lines in `index.html`, the precache list in `sw.js`, and the deployment verifier.
 Existing saved lists automatically replace recognized old embedded photos with the
-new file paths, without changing custom instructions, custom pictures or checkmarks.
+new file paths. The retired interior-lighting section is removed from startup and
+shutdown lists, with remaining checkmarks remapped to their original instructions.
+Shutdown includes an emergency/stair-lighting review before returning the keys.
+The circuit references come from the startup list; switching this lighting off
+requires the site's approved procedure and confirmation from the responsible person.
 
 ### Local Testing
 

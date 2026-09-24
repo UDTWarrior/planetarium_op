@@ -17,7 +17,7 @@ for (const file of ["index.html", "classic.html"]) {
       await expect(heading).toHaveText(title);
       expect(await heading.evaluate(style)).toEqual(await section.evaluate(style));
     }
-    await expect(page.locator("#domeCount")).toHaveText("0/25");
+    await expect(page.locator("#domeCount")).toHaveText("0/24");
     await page.locator('[data-mode="stop"]').click();
     await expect(page.locator(".note").first()).toContainText("معكوس");
     await page.locator('[data-mode="shows"]').click();

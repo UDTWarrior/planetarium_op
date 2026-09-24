@@ -287,31 +287,27 @@
       "لف الزر الدائري لحد ON واضغط عليه",
       "!images/reference-04.webp",
       "",
-      "# 4 · الإضاءة الداخلية للقبة",
-      "اضغط مستمر على زر تشغيل جهاز الحاسب الخاص بالإضاءة لحد ما تسمع صفارة",
-      "!images/reference-05.webp",
-      "",
-      "# 5 · تكييف أجهزة النظام",
+      "# 4 · تكييف أجهزة النظام",
       "لف الزر الأحمر جوه دولاب التكييف ربع لفة مع عقارب الساعة — للجهازين",
       "استنى لحد ما بيانات التشغيل تظهر على الشاشة",
       "اضغط الزر الأسود الخارجي على وضع ON",
       "!images/reference-06.webp",
       "",
-      "# 6 · النظام",
+      "# 5 · النظام",
       "شغّل الـ 10 أجهزة",
       "!images/reference-07.webp",
       "",
-      "# 7 · نظام الصوت",
+      "# 6 · نظام الصوت",
       "لف المفتاح ربع لفة عكس عقارب الساعة",
       "!images/reference-08.webp",
       "",
-      "# 8 · إضاءة الطوارئ والسلم",
+      "# 7 · إضاءة الطوارئ والسلم",
       "## لوحة الكهرباء جوه غرفة الـ UPS، أول لوحة على اليمين",
       "!images/reference-09.webp",
       "نور الطوارئ: قاطع 4 و 5",
       "نور السلم: قاطع 6 و 9",
       "",
-      "# 9 · السوفت وير والبروجكتور",
+      "# 8 · السوفت وير والبروجكتور",
       "افتح برنامج DigiStar4",
       "ادخل على System tab",
       "اضغط Power On في All Projectors",
@@ -336,24 +332,27 @@
       "لف الزر الأحمر جوه دولاب التكييف ربع لفة عكس عقارب الساعة — للجهازين",
       "!images/reference-06.webp",
       "",
-      "# 4 · الإضاءة الداخلية للقبة",
-      "اضغط مستمر على زر جهاز الحاسب الخاص بالإضاءة لحد ما يقفل",
-      "!images/reference-05.webp",
-      "",
-      "# 5 · التكييف المركزي",
+      "# 4 · التكييف المركزي",
+      "!images/reference-03.webp",
       "اضغط الزر الدائري واختر Preselection",
       "لف الزر الدائري لحد OFF واضغط عليه",
       "افصل كابل الشاشة واقفل غطاء اللوحة بالمفتاح",
       "!images/reference-04.webp",
       "",
-      "# 6 · الإضاءة الخارجية",
+      "# 5 · الإضاءة الخارجية",
+      "!images/reference-02.webp",
       "إضاءة المدخل: قاطع 15 و 16",
       "الكاونتر: قاطع 2",
       "اللوح على الجانبين: قاطع 6 و 8",
       "الهالوجين: قاطع 1 و 3 و 4",
       "الممرات: قاطع 7 و 18",
-      "> إضاءة الطوارئ والسلم مش في قايمة الإغلاق بالدوك — سايبها زي ما هي",
-      "!images/reference-02.webp",
+      "",
+      "# 6 · إضاءة الطوارئ والسلم",
+      "## لوحة الكهرباء جوه غرفة الـ UPS، أول لوحة على اليمين",
+      "!images/reference-09.webp",
+      "> لا تفصل إنارة الطوارئ أو السلم إلا وفق إجراء الموقع المعتمد وبعد تأكيد المسؤول أن الإخلاء آمن.",
+      "راجع نور الطوارئ: قاطع 4 و 5",
+      "راجع نور السلم: قاطع 6 و 9",
       "",
       "# 7 · المفاتيح",
       "رجّع مفاتيح القبة لمكتب م. أحمد جمعة",
@@ -447,6 +446,149 @@
     if(updated!==edits[m]){ edits[m]=updated; migrated=true; }
   });
   if(migrated) save(K_STEPS,edits);
+
+  function removeInteriorLighting(text,checks){
+    var lines=String(text).split(/\r?\n/), kept=[], progress=[], index=0;
+    var removing=false, removed=false;
+    lines.forEach(function(line){
+      var s=line.trim(), itemIndex=index;
+      if(s) index++;
+      if(/^#\s+4\s*·\s*الإضاءة الداخلية للقبة$/.test(s)){
+        removing=true; removed=true;
+      }else if(/^#\s+/.test(s)){
+        removing=false;
+      }
+      if(removing) return;
+      if(removed){
+        line=line.replace(/^(\s*#\s+)([5-9])(\s*·)/,function(match,prefix,number,suffix){
+          return prefix+(Number(number)-1)+suffix;
+        });
+      }
+      kept.push(line);
+      if(s) progress.push(!!checks[itemIndex]);
+    });
+    return {text:removed ? kept.join("\n") : text, checks:removed ? progress : checks, removed:removed};
+  }
+
+  // Progress uses non-empty line indices, so removing a section also shifts its checks.
+  var lightingEditsChanged=false, lightingProgressChanged=false;
+  ["start","stop"].forEach(function(m){
+    if(typeof edits[m]==="string"){
+      var result=removeInteriorLighting(edits[m],prog[m]);
+      if(result.removed){
+        edits[m]=result.text; prog[m]=result.checks;
+        lightingEditsChanged=true; lightingProgressChanged=true;
+      }
+    }else if(!prog.interiorLightingRemoved){
+      // The old defaults contained a heading, one step and one photo at these indices.
+      prog[m].splice(m==="start" ? 22 : 13,3);
+      lightingProgressChanged=true;
+    }
+  });
+  if(lightingEditsChanged) save(K_STEPS,edits);
+  if(!prog.interiorLightingRemoved || lightingProgressChanged){
+    prog.interiorLightingRemoved=true;
+    save(K_PROG,prog);
+  }
+
+  // Insert the missing shutdown section without transferring old checks to new tasks.
+  if(!prog.stopLightingAdded){
+    if(typeof edits.stop==="string"){
+      var stopLines=edits.stop.split(/\r?\n/), stopIndex=0;
+      var stopEntries=stopLines.map(function(line){
+        return {line:line,checked:line.trim() ? !!prog.stop[stopIndex++] : false};
+      });
+      var omission="> إضاءة الطوارئ والسلم مش في قايمة الإغلاق بالدوك";
+      if(stopEntries.some(function(entry){ return entry.line.trim().indexOf(omission)===0; })){
+        stopEntries=stopEntries.filter(function(entry){ return entry.line.trim().indexOf(omission)!==0; });
+        var hasLighting=stopEntries.some(function(entry){
+          return /^#+\s*(?:\d+\s*·\s*)?إضاءة الطوارئ والسلم$/.test(entry.line.trim());
+        });
+        if(!hasLighting){
+          var keysIndex=stopEntries.findIndex(function(entry){ return /^#\s+\d+\s*·\s*المفاتيح$/.test(entry.line.trim()); });
+          var number=keysIndex<0 ? 6 : Number(stopEntries[keysIndex].line.match(/\d+/)[0]);
+          var block=DEF.stop.slice(DEF.stop.indexOf("# 6 · إضاءة الطوارئ والسلم"),DEF.stop.indexOf("# 7 · المفاتيح")).trim();
+          block=block.replace(/^# 6/, "# "+number);
+          if(keysIndex<0) keysIndex=stopEntries.length;
+          else stopEntries[keysIndex].line=stopEntries[keysIndex].line.replace(/\d+/,String(number+1));
+          var additions=block.split("\n").map(function(line){ return {line:line,checked:false}; });
+          stopEntries.splice.apply(stopEntries,[keysIndex,0].concat(additions));
+        }
+        edits.stop=stopEntries.map(function(entry){ return entry.line; }).join("\n");
+        prog.stop=stopEntries.filter(function(entry){ return entry.line.trim(); }).map(function(entry){ return entry.checked; });
+        save(K_STEPS,edits);
+      }
+    }else{
+      // Indices are for the defaults after the retired interior-lighting section was removed.
+      prog.stop.splice(24,1);
+      while(prog.stop.length<25) prog.stop.push(false);
+      prog.stop.splice(25,0,false,false,false,false,false,false);
+    }
+    prog.stopLightingAdded=true;
+    save(K_PROG,prog);
+  }
+
+  // Moving the photo must move its progress slot too, not the instruction checkmarks.
+  if(!prog.stopLightingPhotoFirst){
+    if(typeof edits.stop==="string"){
+      var photoIndex=0;
+      var photoEntries=edits.stop.split(/\r?\n/).map(function(line){
+        return {line:line,checked:line.trim() ? !!prog.stop[photoIndex++] : false};
+      });
+      var lightingHeading=photoEntries.findIndex(function(entry){
+        return /^#\s+\d+\s*·\s*الإضاءة (?:الخارجية|الداخلية)$/.test(entry.line.trim());
+      });
+      if(lightingHeading>=0){
+        for(var p=lightingHeading+1;p<photoEntries.length;p++){
+          if(/^#\s+/.test(photoEntries[p].line.trim())) break;
+          if(/^!(?:\.\/)?images\/reference-02\.webp$/.test(photoEntries[p].line.trim())){
+            if(p!==lightingHeading+1){
+              photoEntries.splice(lightingHeading+1,0,photoEntries.splice(p,1)[0]);
+              edits.stop=photoEntries.map(function(entry){ return entry.line; }).join("\n");
+              prog.stop=photoEntries.filter(function(entry){ return entry.line.trim(); }).map(function(entry){ return entry.checked; });
+              save(K_STEPS,edits);
+            }
+            break;
+          }
+        }
+      }
+    }else{
+      while(prog.stop.length<25) prog.stop.push(false);
+      prog.stop.splice(19,0,prog.stop.splice(24,1)[0]);
+    }
+    prog.stopLightingPhotoFirst=true;
+    save(K_PROG,prog);
+  }
+
+  // Add the missing controller reference without shifting checks onto other steps.
+  if(!prog.stopCentralPhotoAdded){
+    if(typeof edits.stop==="string"){
+      var centralIndex=0;
+      var centralEntries=edits.stop.split(/\r?\n/).map(function(line){
+        return {line:line,checked:line.trim() ? !!prog.stop[centralIndex++] : false};
+      });
+      var centralHeading=centralEntries.findIndex(function(entry){
+        return /^#\s+\d+\s*·\s*التكييف المركزي$/.test(entry.line.trim());
+      });
+      if(centralHeading>=0){
+        var centralEnd=centralHeading+1;
+        while(centralEnd<centralEntries.length && !/^#\s+/.test(centralEntries[centralEnd].line.trim())) centralEnd++;
+        var centralSection=centralEntries.slice(centralHeading+1,centralEnd);
+        var hasController=centralSection.some(function(entry){ return /^!(?:\.\/)?images\/reference-03\.webp$/.test(entry.line.trim()); });
+        if(!hasController){
+          centralEntries.splice(centralHeading+1,0,{line:"!images/reference-03.webp",checked:false});
+          edits.stop=centralEntries.map(function(entry){ return entry.line; }).join("\n");
+          prog.stop=centralEntries.filter(function(entry){ return entry.line.trim(); }).map(function(entry){ return entry.checked; });
+          save(K_STEPS,edits);
+        }
+      }
+    }else{
+      while(prog.stop.length<14) prog.stop.push(false);
+      prog.stop.splice(14,0,false);
+    }
+    prog.stopCentralPhotoAdded=true;
+    save(K_PROG,prog);
+  }
 
   function validImage(source){
     return /^data:image\//.test(source) || /^(?:\.\/)?images\/[a-zA-Z0-9_-]+\.(?:webp|png)$/.test(source);
