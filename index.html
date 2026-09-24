@@ -796,9 +796,10 @@
 
   var imageViewer=document.getElementById("imageViewer"), imageCanvas=document.getElementById("imageCanvas");
   var fullImage=document.getElementById("fullImage"), zoomImage=document.getElementById("zoomImage");
-  var imageOpener=null;
+  var imageOpener=null, viewerBackgroundPress=false;
   function openImage(photo){
     imageOpener=photo;
+    viewerBackgroundPress=false;
     fullImage.src=photo.querySelector("img").src;
     fullImage.alt=photo.dataset.caption;
     imageCanvas.classList.remove("zoomed");
@@ -810,6 +811,18 @@
     zoomImage.setAttribute("aria-pressed",String(zoomed)); zoomImage.textContent=zoomed ? "ملاءمة الشاشة" : "تكبير";
   });
   document.getElementById("closeImage").addEventListener("click",function(){ imageViewer.close(); });
+  function isViewerBackground(target){
+    return target instanceof Element && !target.closest("#fullImage,button");
+  }
+  // A drag starting on the zoomed image must not become a background dismissal.
+  imageViewer.addEventListener("pointerdown",function(ev){
+    viewerBackgroundPress=ev.isPrimary && ev.button===0 && isViewerBackground(ev.target);
+  });
+  imageViewer.addEventListener("pointercancel",function(){ viewerBackgroundPress=false; });
+  imageViewer.addEventListener("click",function(ev){
+    if(viewerBackgroundPress && isViewerBackground(ev.target)) imageViewer.close();
+    viewerBackgroundPress=false;
+  });
   imageViewer.addEventListener("close",function(){
     if(imageOpener && imageOpener.isConnected) imageOpener.focus({preventScroll:true});
   });

@@ -2,7 +2,7 @@
 
 // Bump this version whenever a deployed application file changes.
 const CACHE_PREFIX = "planetarium-op-";
-const CACHE_NAME = CACHE_PREFIX + "v13";
+const CACHE_NAME = CACHE_PREFIX + "v14";
 const ROOT = new URL("./", self.location.href);
 const SHELL = ["./", "./index.html", "./classic.html", "./install.js", "./manifest.webmanifest", "./manifest-classic.webmanifest",
   "./icons/dome.svg", "./icons/icon-192.png", "./icons/icon-512.png",
