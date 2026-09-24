@@ -8,12 +8,21 @@ test("clicking or tapping outside the reference image closes it and restores foc
     if (isMobile) await page.touchscreen.tap(x, y);
     else await page.mouse.click(x, y);
   };
-  for (const area of ["backdrop", "padding", "toolbar"]) {
+  for (const area of ["top", "bottom", "left", "right", "padding", "toolbar"]) {
     await photo.click();
     await page.locator("#fullImage").evaluate(image => image.decode());
-    const bounds = await viewer.boundingBox();
-    if (area === "backdrop") {
-      await press(2, 2);
+    const bounds = await page.locator(".image-viewer-frame").boundingBox();
+    const viewport = page.viewportSize();
+    const outside = {
+      top: [viewport.width / 2, bounds.y / 2],
+      bottom: [viewport.width / 2, (bounds.y + bounds.height + viewport.height) / 2],
+      left: [bounds.x / 2, viewport.height / 2],
+      right: [(bounds.x + bounds.width + viewport.width) / 2, viewport.height / 2]
+    }[area];
+    if (outside) {
+      // Hit a real DOM surface, not a browser-generated dialog backdrop.
+      expect(await page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.id, outside)).toBe("imageViewer");
+      await press(...outside);
     } else if (area === "padding") {
       await press(bounds.x + 4, bounds.y + bounds.height / 2);
     } else {
@@ -21,6 +30,26 @@ test("clicking or tapping outside the reference image closes it and restores foc
     }
     await expect(viewer).not.toBeVisible();
     await expect(photo).toBeFocused();
+    await expect(page.locator('[role="checkbox"][aria-checked="true"]')).toHaveCount(0);
+  }
+});
+
+test("swipes, cancelled touches and multi-touch do not dismiss the viewer", async ({ page }) => {
+  await page.goto("./");
+  await page.locator(".photo").first().click();
+  const viewer = page.locator("#imageViewer");
+  for (const gesture of ["swipe", "cancel", "multi"]) {
+    await viewer.dispatchEvent("pointerdown", { pointerId: 1, pointerType: "touch", isPrimary: true, button: 0, clientX: 2, clientY: 2 });
+    if (gesture === "swipe") {
+      await viewer.dispatchEvent("pointermove", { pointerId: 1, isPrimary: true, clientX: 2, clientY: 50 });
+    } else if (gesture === "cancel") {
+      await viewer.dispatchEvent("pointercancel", { pointerId: 1 });
+    } else {
+      await viewer.dispatchEvent("pointerdown", { pointerId: 2, pointerType: "touch", isPrimary: false, button: 0, clientX: 5, clientY: 5 });
+    }
+    await viewer.dispatchEvent("pointerup", { pointerId: 1, isPrimary: true, clientX: 2, clientY: 2 });
+    await viewer.dispatchEvent("click");
+    await expect(viewer).toBeVisible();
   }
 });
 
